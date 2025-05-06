@@ -1,0 +1,8 @@
+nome = input("digite seu nome: ")
+cidade = input("digite sua cidade: ")
+estado = input("digite seu estado: ")
+datanacimento = input("digite sua data de nascimento: ")
+print("Nome do aluno: ", nome)
+print("Cidade que mora: ", cidade)
+print("Estado: ", estado)
+print("Data de nascimento: ", datanacimento)
