@@ -1,0 +1,229 @@
+create schema Transportadora;
+
+
+------------------------------------------
+
+CREATE TABLE destinatario(
+codigo int(7) primary key,
+nome varchar(25) not null,
+cpf varchar(11) not null,
+endereco varchar(25) not null,
+telefone int (9) null
+);
+
+CREATE TABLE mercadoria(
+codigo int(7) primary key,
+peso varchar(6) not null,
+preco int(9) not null,
+coddestinatario int(11),
+placaminhao varchar(7),
+foreign key (coddestinatario) references destinatario(codigo)
+);
+
+CREATE TABLE caminhao(
+placaminhao int(7) primary key,
+modelo varchar(25) not null,
+manutencao int(9) null,
+custo int(9) null,
+codmercadoria int(7),
+foreign key(codmercadoria) references mercadoria(codigo)
+);
+
+CREATE TABLE Funcionario(
+codigo int(7) not null primary key,
+cargo varchar(15) not null,
+salario int(6) not null,
+cpf varchar(11) not null,
+nome varchar(25) not null,
+placaminhao int(7),
+foreign key (placaminhao) references caminhao(placaminhao)
+);
+
+CREATE TABLE Fornecedor(
+codigo int(7) primary key,
+endereco varchar(25) not null,
+nome varchar(20) not null,
+frete int(6) null,
+codmercadoria int(7),
+foreign key (codmercadoria) references mercadoria(codigo)
+);
+
+------------------------------------------------------------------------
+
+ALTER TABLE caminhao
+ADD COLUMN codfuncionario INT(7);
+
+ALTER TABLE caminhao
+ADD CONSTRAINT fk_codfuncionario FOREIGN KEY (codfuncionario)
+REFERENCES funcionario(codigo);
+
+
+--------------------------------------------------------------------------
+
+insert into destinatario (codigo, nome, cpf, endereco, telefone)
+values (9001, "João Silva", 12345678900, "Rua das Flores, 123", 912345678);
+
+insert into destinatario (codigo, nome, cpf, endereco, telefone)
+values (9002, "Maria Oliveira", 98765432111, "Avenida Brasil, 456", 998765432);
+
+insert into destinatario (codigo, nome, cpf, endereco, telefone)
+values (9003, "Carlos Pereira", 11122233344, "Rua dos Pinheiros, 789", 911112222);
+
+insert into destinatario (codigo, nome, cpf, endereco, telefone)
+values (9004, "Ana Santos", 44455566677, "Praça das Palmeiras, 101", 923456789);
+
+insert into destinatario (codigo, nome, cpf, endereco, telefone)
+values (9005, "Lucas Costa", 77788899900, "Travessa do Sol, 202", 934567890);
+
+-----------------------------------------------------------------------------------------
+
+insert into mercadoria (codigo, peso, preco, coddestinatario, placaminhao)
+values (1001, "5.00kg", 1500, 9001, "1234567");
+
+insert into mercadoria (codigo, peso, preco, coddestinatario, placaminhao)
+values (1002, "6.00kg", 1800, 9002, "2345678");
+
+insert into mercadoria (codigo, peso, preco, coddestinatario, placaminhao)
+values (1003, "7.00kg", 2000, 9003, "3456789");
+
+insert into mercadoria (codigo, peso, preco, coddestinatario, placaminhao)
+values (1004, "8.00kg", 2500, 9004, "4567890");
+
+insert into mercadoria (codigo, peso, preco, coddestinatario, placaminhao)
+values (1005, "9.00kg", 3000, 9005, "5678901");
+
+----------------------------------------------------------------------------------------------
+
+insert into caminhao (placaminhao, modelo, manutencao, custo, codmercadoria)
+values (1234567, "Mercedes 1113", 20000, 1500, 1001);
+
+insert into caminhao (placaminhao, modelo, manutencao, custo, codmercadoria)
+values (2345678, "Volkswagen 17-230", 25000, 2000, 1002);
+
+insert into caminhao (placaminhao, modelo, manutencao, custo, codmercadoria)
+values (3456789, "Scania P 310", 30000, 2500, 1003);
+
+insert into caminhao (placaminhao, modelo, manutencao, custo, codmercadoria)
+values (4567890, "Volvo FH 540", 35000, 3000, 1004);
+
+insert into caminhao (placaminhao, modelo, manutencao, custo, codmercadoria)
+values (5678901, "MAN TGX 18.440", 40000, 3500, 1005);
+
+----------------------------------------------------------------------------------------------
+
+insert into funcionario (codigo, cargo, salario, cpf, nome, placaminhao)
+values (2001, "Motorista", 3500, 12345678900, "José Almeida", 1234567);
+
+insert into funcionario (codigo, cargo, salario, cpf, nome, placaminhao)
+values (2002, "Ajudante", 2500, 98765432111, "Carlos Oliveira", 2345678);
+
+insert into funcionario (codigo, cargo, salario, cpf, nome, placaminhao)
+values (2003, "Supervisor", 4500, 11122233344, "Marcos Silva", 3456789);
+
+insert into funcionario (codigo, cargo, salario, cpf, nome, placaminhao)
+values (2004, "Motorista", 3700, 44455566677, "Paulo Sousa", 4567890);
+
+insert into funcionario (codigo, cargo, salario, cpf, nome, placaminhao)
+values (2005, "Ajudante", 2600, 77788899900, "Ricardo Lima", 5678901);
+
+---------------------------------------------------------------------------------------------
+
+insert into fornecedor (codigo, endereco, nome, frete, codmercadoria)
+values (3001, "Avenida Central, 123", 'TransLogistica', 500, 1001);
+
+insert into fornecedor (codigo, endereco, nome, frete, codmercadoria)
+values (3002, "Rua das Indústrias, 456", 'Cargas Rápidas', 600, 1002);
+
+insert into fornecedor (codigo, endereco, nome, frete, codmercadoria)
+values (3003, "Rodovia BR-101, Km 45", 'Nordeste Dist.', 700, 1003);
+
+insert into fornecedor (codigo, endereco, nome, frete, codmercadoria)
+values (3004, "Estrada Velha, 789", 'Amazonas Transp.', 800, 1004);
+
+insert into fornecedor (codigo, endereco, nome, frete, codmercadoria)
+values (3005, "Praça do Comércio, 101", 'Litoral Entregas', 900, 1005);
+
+------------------------------------------------------------------------------------------------
+
+SELECT destinatario.nome, COUNT(mercadoria.codigo) AS total_mercadorias
+FROM destinatario
+INNER JOIN mercadoria ON destinatario.codigo = mercadoria.coddestinatario
+GROUP BY destinatario.nome;
+
+SELECT caminhao.modelo, SUM(mercadoria.preco) AS valor_total_mercadorias
+FROM caminhao
+LEFT JOIN mercadoria ON caminhao.placaminhao = mercadoria.placaminhao
+GROUP BY caminhao.modelo;
+
+SELECT fornecedor.nome, AVG(mercadoria.preco) AS preco_medio
+FROM fornecedor
+RIGHT JOIN mercadoria ON fornecedor.codmercadoria = mercadoria.codigo
+GROUP BY fornecedor.nome;
+
+SELECT caminhao.modelo, MAX(funcionario.salario) AS maior_salario
+FROM caminhao
+INNER JOIN funcionario ON caminhao.placaminhao = funcionario.placaminhao
+GROUP BY caminhao.modelo;
+
+SELECT fornecedor.nome, MIN(mercadoria.preco) AS menor_preco
+FROM fornecedor
+LEFT JOIN mercadoria ON fornecedor.codmercadoria = mercadoria.codigo
+GROUP BY fornecedor.nome;
+
+SELECT funcionario.nome, funcionario.cargo, caminhao.modelo
+FROM funcionario
+INNER JOIN caminhao ON funcionario.placaminhao = caminhao.placaminhao
+ORDER BY funcionario.salario DESC;
+
+SELECT fornecedor.nome, mercadoria.peso, mercadoria.preco
+FROM fornecedor
+RIGHT JOIN mercadoria ON fornecedor.codmercadoria = mercadoria.codigo
+WHERE mercadoria.preco > 2000
+ORDER BY mercadoria.preco DESC;
+
+SELECT caminhao.modelo, COUNT(mercadoria.codigo) AS total_mercadorias
+FROM caminhao
+INNER JOIN mercadoria ON caminhao.placaminhao = mercadoria.placaminhao
+WHERE caminhao.manutencao > 25000
+GROUP BY caminhao.modelo;
+
+SELECT funcionario.cargo, AVG(funcionario.salario) AS salario_medio
+FROM funcionario
+LEFT JOIN caminhao ON funcionario.placaminhao = caminhao.placaminhao
+GROUP BY funcionario.cargo;
+
+SELECT fornecedor.nome, fornecedor.frete, mercadoria.codigo
+FROM fornecedor
+RIGHT JOIN mercadoria ON fornecedor.codmercadoria = mercadoria.codigo
+WHERE fornecedor.frete IS NOT NULL
+ORDER BY fornecedor.frete ASC;
+
+--------------------------------------------------------------------------------------
+
+UPDATE funcionario
+SET salario = salario + 500
+WHERE cargo = 'Motorista';
+
+UPDATE caminhao
+SET manutencao = manutencao + 5000
+WHERE modelo LIKE 'Mercedes%';
+
+UPDATE mercadoria
+SET preco = preco * 1.10
+WHERE peso >= '7.00kg';
+
+UPDATE fornecedor
+SET endereco = 'Rodovia BR-101, Km 50'
+WHERE nome LIKE 'Nordeste%';
+
+UPDATE destinatario
+SET telefone = '999999999'
+WHERE telefone IS NULL;
+
+-------------------------------------------------------------------------------------------
+
+DELETE FROM mercadoria
+WHERE preco < 1500;
+
+DELETE FROM fornecedor
+WHERE frete > 800;

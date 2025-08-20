@@ -1,0 +1,34 @@
+#include <iostream>
+using namespace std;
+
+
+	class Carro{
+		private:
+		string marca;
+		string modelo;
+		int ano;
+	
+		public:
+	
+		void exibirinfo(){
+			cout<<"Marca: "<<marca<<", modelo: "<<modelo<< ", Ano"<<ano<< endl;
+		}	
+		
+		void SetMarca(string m) {
+			marca = m;
+		}
+		
+		string GetMarca(){
+			return marca;
+			}
+	};
+
+int main(){
+	Carro meuCarro;
+		
+		meuCarro.SetMarca("Honda");
+		meuCarro.exibirinfo();
+		cout << "Nova maarca: " << meuCarro.GetMarca() << endl;	
+	}
+
+
